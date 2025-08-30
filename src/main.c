@@ -32,9 +32,9 @@ void app_main(void)
     nvs_init();
     vTaskDelay(pdMS_TO_TICKS(1));  // время на стабилизацию системы (лучше использовать явное преобразование)
     
-    // /* Регистрация нашего обработчика перезагрузки */
-    // esp_register_shutdown_handler(&custom_shutdown_handler);
-    // vTaskDelay(pdMS_TO_TICKS(1));
+    /* Регистрация нашего обработчика перезагрузки */
+    esp_register_shutdown_handler(&custom_shutdown_handler);
+    vTaskDelay(pdMS_TO_TICKS(1));
 
     /* Загрузка параметров из NVS */
     update_parameters_from_nvs();
@@ -59,7 +59,7 @@ void app_main(void)
     vTaskDelay(pdMS_TO_TICKS(1));
 
     /* Запуск менеджера WiFi */
-//    start_wifi_manager_task();
+    start_wifi_manager_task();
     vTaskDelay(pdMS_TO_TICKS(1));
 
     ESP_LOGI(TAG, "System initialized");
