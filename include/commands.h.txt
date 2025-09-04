@@ -1,5 +1,8 @@
+
+Важно: файл может содержать информацию, соответствующую ранним версиям.
+
 /*
- * - заголовок    | SOH | DAD | SAD | ISI | FNC | DataHead |
+ *  - заголовок    | SOH | DAD | SAD | ISI | FNC | DataHead |
  *  или безадресный заголовок | SOH | ISI | FNC | DataHead |
  *  - данные                                               | STX | DataSet | ETX |
  *  - контрольная информация                                                     | CRC1 | CRC2 |
