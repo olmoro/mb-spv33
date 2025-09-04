@@ -90,16 +90,9 @@
 //                                      NVS
 // ---------------------------------------------------------------------------------
 
-/** Размеры и положение holding-регистров от начала: - отменено
- * - для функции 0x03 доступны все регистры;
- * - для функции 0x06 доступны все регистры;
- * - для функции 0x10 для записи пакета запроса доступны регистры //50...7F.
- */
-
 // Конфигурация хранилища определяет количество и размер файлов в разделе (до 4096)
 #define SP_STORAGE_FILE_COUNT 42                          // Максимальное количество файлов
 #define SP_STORAGE_FILE_SIZE 96                           // Размер файла, включая байт длины (48 регистров)
-//#define SP_STORAGE_OPERATION_OFFSET SP_STORAGE_FILE_COUNT // 96 Смещение для операции записи
 
 // номера 32-х регистров управления         0x00 ... 0x1F
 // номера 96-и регистров для чтения пакета  0x20 ... 0x7F 
@@ -144,11 +137,6 @@ typedef enum {
     WIFI_CONDITION_AP = 2
 } wifi_condition_t;
 
-// // Добавим явные значения для режимов
-// #define WIFI_MODE_OFF 0
-// #define WIFI_MODE_STA 1
-// #define WIFI_MODE_AP  2
-
 // ---------------------------------------------------------------------------------
 //                                    MODBUS
 // ---------------------------------------------------------------------------------
@@ -185,10 +173,9 @@ typedef struct
 #define REG_SP_READ_REQ       regs[0x0E]  // Регистр инициализации чтения (modbus) из HLD_READ_REQ
 #define REG_SP_WRITE_REQ      regs[0x0F]  // Регистр инициализации записи (modbus) в HLD_WRITE_REQ
 
+// Регистры работы с разделом `config`
 #define REG_REPEAT            regs[0x17]  // Repeat request period in seconds (5+)
 #define REG_TARGET            regs[0x18]  // 
-
-// Регистры работы с разделом `config`
 #define REG_CONFIG_UPDATE     regs[0x19]  // Конфигурационный регистр
 #define REG_CONFIG_OPERATION  regs[0x1A]  // Операция: [15] R/W, [14:8] тип, [7:0] индекс
 #define REG_CONFIG_INDEX      regs[0x1B]  // Индекс конфигурации (STA = 0 1 2)
@@ -199,7 +186,7 @@ typedef struct
 // Метаданные для каждого параметра
 static const ParamMeta param_meta[PARAMS_COUNT] = {
     {0,    999,  CURRENT_VERSION},  // 0x00 Версия          current version
-    {0,    250,  0x04},             // 0x06 mb_slave_addr   modbus slave address
+    {0,    250,  0x06},             // 0x06 mb_slave_addr   modbus slave address
     {0,      9,  0x05},             // 0x02 mb_baud_index   0: 300 ... 9: 115200 baud
     {2,     10,  0x04},             // 0x03 mb_time_out     ms
     {0,     29,  0x00},             // 0x04 dad             0 ... 29:  магистральный адрес приёмника
@@ -252,44 +239,3 @@ typedef enum
 #define MIN_PAYLOAD_SIZE 4               // Минимальный размер полезной нагрузки
 
 #define REG_REPEAT_MIN 5                 // Repeat request period min (seconds)
-
-
-// // Режимы работы WiFi
-// typedef enum {
-//     WIFI_CONDITION_OFF = 0,
-//     WIFI_CONDITION_STA = 1,
-//     WIFI_CONDITION_AP = 2
-// } wifi_condition_t;
-
-// // Добавим явные значения для режимов
-// #define WIFI_MODE_OFF 0
-// #define WIFI_MODE_STA 1
-// #define WIFI_MODE_AP  2
-
-// // Явное преобразование регистра в режим
-// #define REG_WIFI_MODE ((wifi_condition_t)regs[0x09])
-
-
-// ---------------------------------------------------------------------------------
-//                  Улучшенная архитектура обработки параметров
-// ---------------------------------------------------------------------------------
-// /**
-//  * Вместо структуры предлагаю использовать динамическую систему тегов, которая будет:
-//  * 1. Автоматически создавать элементы данных при первом появлении параметра
-//  * 2. Хранить исторические значения для построения графиков
-//  * 3. Обеспечивать быстрый доступ по имени параметра
-//  */
-// typedef struct {
-//     char name[32];              // Имя параметра
-//     float current_value;         // Текущее значение
-//     float *history;              // Буфер истории значений
-//     uint16_t history_size;       // Размер буфера истории
-//     uint16_t history_index;      // Текущая позиция в истории
-//     uint32_t last_update;        // Время последнего обновления
-//     uint8_t flags;               // Флаги (для будущего расширения)
-// } DataTag;
-
-// // Функции для работы с тегами
-// DataTag* get_or_create_tag(const char *name, uint16_t history_size);
-// void update_tag_value(DataTag *tag, float value);
-// DataTag* find_tag_by_name(const char *name);
