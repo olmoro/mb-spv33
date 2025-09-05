@@ -198,7 +198,7 @@ static const ParamMeta param_meta[PARAMS_COUNT] = {
 };
 
 #define MB_PORT_NUM UART_NUM_1
-#define MB_QUEUE_SIZE 2       // Нужен для инициализации UART
+#define MB_QUEUE_SIZE 2U // Нужен для инициализации UART
 
 // ---------------------------------------------------------------------------------
 //                                    SP
